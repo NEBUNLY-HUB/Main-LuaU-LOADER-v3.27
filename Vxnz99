@@ -13064,13 +13064,18 @@ spawn(function()
 	end
 end)
 L_1_[93]["Raids"]:AddToggle({
-	["Name"] = "Auto Fly To Lab",
+	["Name"] = "Auto Tween To Lab",
 	["Default"] = false,
 	["Callback"] = function(L_1509_arg0)
 		-- Serviços e variáveis principais
 		local L_2011_ = game:GetService("Players").LocalPlayer
 		local L_2012_ = game:GetService("TweenService")
 		local L_2013_ = L_2011_.Character and L_2011_.Character:WaitForChild("HumanoidRootPart")
+
+		-- Atualiza hrp no respawn
+		L_2011_.CharacterAdded:Connect(function(char)
+			L_2013_ = char:WaitForChild("HumanoidRootPart")
+		end)
 
 		-- Variáveis internas do voo
 		local L_2000_ = false
@@ -13087,54 +13092,38 @@ L_1_[93]["Raids"]:AddToggle({
 		-- Função principal de voo
 		local function flyToFast(L_2004_, L_2005_, L_2006_)
 			if not L_2013_ or not L_2013_.Parent then return end
-			if L_2001_ then 
-				L_2001_:Cancel()
-				L_2001_ = nil
-			end
-			local L_2007_
-			if L_2005_ then
-				L_2007_ = L_2004_ * CFrame.new(0, L_2005_, 0)
-			else
-				L_2007_ = L_2004_ * CFrame.new(0, 5, 0)
-			end
+			if L_2001_ then L_2001_:Cancel(); L_2001_ = nil end
+			local L_2007_ = L_2005_ and (L_2004_ * CFrame.new(0, L_2005_, 0)) or (L_2004_ * CFrame.new(0, 5, 0))
 			local L_2008_ = (L_2007_.Position - L_2013_.Position).Magnitude
-			if L_2006_ or L_2008_ < 50 then
-				L_2013_.CFrame = L_2007_
-				return
-			end
+			if L_2006_ or L_2008_ < 50 then L_2013_.CFrame = L_2007_; return end
 			local L_2009_ = L_2008_ / L_2002_
 			L_2003_.CFrame = L_2013_.CFrame
-			local L_2010_ = TweenInfo.new(L_2009_, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, 0, false, 0)
+			local L_2010_ = TweenInfo.new(L_2009_, Enum.EasingStyle.Linear)
 			L_2001_ = L_2012_:Create(L_2003_, L_2010_, {CFrame = L_2007_})
 			L_2001_:Play()
 			L_2000_ = true
-			L_2001_.Completed:Connect(function()
-				L_2000_ = false
-				L_2001_ = nil
-			end)
+			L_2001_.Completed:Connect(function() L_2000_ = false; L_2001_ = nil end)
 		end
 
 		-- Função para parar voo
 		local function stopFlying()
 			L_2000_ = false
-			if L_2001_ then 
-				L_2001_:Cancel()
-				L_2001_ = nil
-			end
+			if L_2001_ then L_2001_:Cancel(); L_2001_ = nil end
 		end
 
 		-- Controle do toggle
 		_G["FlyLab"] = L_1509_arg0
 
-		-- ESP com borda vermelha
+		-- ESP vermelho claro com borda vermelha clara
 		if _G["FlyLab"] then
 			if L_2011_.Character and not L_2011_.Character:FindFirstChild("L_Highlight") then
 				local L_2014_ = Instance.new("Highlight")
 				L_2014_.Name = "L_Highlight"
 				L_2014_.Parent = L_2011_.Character
-				L_2014_.OutlineColor = Color3.fromRGB(255,0,0) -- borda vermelha
-				L_2014_.OutlineTransparency = 0 -- borda visível
-				L_2014_.FillTransparency = 1 -- sem preenchimento
+				L_2014_.OutlineColor = Color3.fromRGB(255,80,80)   -- borda vermelha clara
+				L_2014_.OutlineTransparency = 0.3
+				L_2014_.FillColor = Color3.fromRGB(255,80,80)      -- corpo vermelho claro
+				L_2014_.FillTransparency = 0.5
 			end
 		else
 			stopFlying()
@@ -13145,19 +13134,21 @@ L_1_[93]["Raids"]:AddToggle({
 		end
 
 		-- Loop de voo
-		while _G["FlyLab"] do
-			task.wait()
-			if World2 then
-				flyToFast(CFrame.new(-6438.73535, 250.645355, -4501.50684), 40, false)
-			elseif World3 then
-				flyToFast(CFrame.new(
-					-5017.40869, 314.844055, -2823.0127,
-					-0.925743818, 4.48217499e-08, -0.378151238,
-					4.55503146e-09, 1, 1.07377559e-07,
-					0.378151238, 9.7681621e-08, -0.925743818
-				), 40, false)
+		task.spawn(function()
+			while _G["FlyLab"] do
+				task.wait()
+				if World2 then
+					flyToFast(CFrame.new(-6438.73535, 250.645355, -4501.50684), 40, false)
+				elseif World3 then
+					flyToFast(CFrame.new(
+						-5017.40869, 314.844055, -2823.0127,
+						-0.925743818, 0, -0.378151238,
+						0, 1, 0,
+						0.378151238, 0, -0.925743818
+					), 40, false)
+				end
 			end
-		end
+		end)
 	end
 })
 L_1_[93]["Raids"]:AddSection({
