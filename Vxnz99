@@ -13064,7 +13064,7 @@ spawn(function()
 	end
 end)
 L_1_[93]["Raids"]:AddToggle({
-	["Name"] = "Auto Tween To Lab",
+	["Name"] = "Auto Fly To Lab",
 	["Default"] = false,
 	["Callback"] = function(L_1509_arg0)
 		-- Serviços e variáveis principais
@@ -13091,6 +13091,8 @@ L_1_[93]["Raids"]:AddToggle({
 
 		-- Função principal de voo
 		local function flyToFast(L_2004_, L_2005_, L_2006_)
+			-- Verifica se o toggle está ativado antes de qualquer ação
+			if not _G["FlyLab"] then return end
 			if not L_2013_ or not L_2013_.Parent then return end
 			if L_2001_ then L_2001_:Cancel(); L_2001_ = nil end
 			local L_2007_ = L_2005_ and (L_2004_ * CFrame.new(0, L_2005_, 0)) or (L_2004_ * CFrame.new(0, 5, 0))
@@ -13113,6 +13115,7 @@ L_1_[93]["Raids"]:AddToggle({
 
 		-- Controle do toggle
 		_G["FlyLab"] = L_1509_arg0
+		stopFlying()
 
 		-- ESP vermelho claro com borda vermelha clara
 		if _G["FlyLab"] then
@@ -13120,37 +13123,41 @@ L_1_[93]["Raids"]:AddToggle({
 				local L_2014_ = Instance.new("Highlight")
 				L_2014_.Name = "L_Highlight"
 				L_2014_.Parent = L_2011_.Character
-				L_2014_.OutlineColor = Color3.fromRGB(255,80,80)   -- borda vermelha clara
-				L_2014_.OutlineTransparency = 0.3
-				L_2014_.FillColor = Color3.fromRGB(255,80,80)      -- corpo vermelho claro
-				L_2014_.FillTransparency = 0.5
+				L_2014_.FillColor = Color3.fromRGB(255,80,80)       -- corpo vermelho claro
+				L_2014_.FillTransparency = 0.5                      -- corpo translúcido
+				L_2014_.OutlineColor = Color3.fromRGB(255,80,80)    -- borda vermelha clara
+				L_2014_.OutlineTransparency = 0.3                   -- borda visível mas suave
 			end
+
+			-- Loop de voo (movido para dentro do bloco de ativação para evitar múltiplos loops)
+			task.spawn(function()
+				while _G["FlyLab"] do
+					task.wait()
+					if World2 then
+						flyToFast(CFrame.new(-6438.73535, 250.645355, -4501.50684), 40, false)
+					elseif World3 then
+						flyToFast(CFrame.new(
+							-5017.40869, 314.844055, -2823.0127,
+							-0.925743818, 0, -0.378151238,
+							0, 1, 0,
+							0.378151238, 0, -0.925743818
+						), 40, false)
+					end
+				end
+				-- Para o voo automaticamente quando o loop terminar
+				stopFlying()
+			end)
 		else
-			stopFlying()
 			if L_2011_.Character and L_2011_.Character:FindFirstChild("L_Highlight") then
 				L_2011_.Character.L_Highlight:Destroy()
 			end
+			-- Garante que o anchor seja resetado se necessário
+			L_2003_.CFrame = CFrame.new()
 			return
 		end
-
-		-- Loop de voo
-		task.spawn(function()
-			while _G["FlyLab"] do
-				task.wait()
-				if World2 then
-					flyToFast(CFrame.new(-6438.73535, 250.645355, -4501.50684), 40, false)
-				elseif World3 then
-					flyToFast(CFrame.new(
-						-5017.40869, 314.844055, -2823.0127,
-						-0.925743818, 0, -0.378151238,
-						0, 1, 0,
-						0.378151238, 0, -0.925743818
-					), 40, false)
-				end
-			end
-		end)
 	end
 })
+
 L_1_[93]["Raids"]:AddSection({
 	"Dungeons Raid [ NEW!]"
 })
