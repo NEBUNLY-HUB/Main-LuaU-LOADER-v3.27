@@ -2706,64 +2706,8 @@ L_1_[5] = replicated["Modules"]["Net"][L_1_[2]({
 
 
 L_1_[93]["Main"]:AddSection({
-	"Weapon"
-})
-WeaponDropdown = L_1_[93]["Main"]:AddDropdown({
-	["Name"] = "Select Weapon",
-	["Options"] = {
-		"Melee";
-		"Sword",
-		"Blox Fruit";
-		"Gun"
-	},
-	["Default"] = "Melee";
-	["Callback"] = function(L_210_arg0)
-		local L_211_ = {}
-		L_211_[1] = L_210_arg0
-		_G["ChooseWP"] = L_211_[1]
-	end
-})
-spawn(function()
-	while task["wait"](.5) do
-		pcall(function()
-			if _G["ChooseWP"] == "Melee" then
-				for L_212_forvar0, L_213_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
-					local L_214_ = {}
-					L_214_[3], L_214_[2] = L_212_forvar0, L_213_forvar1
-					if L_214_[2]["ToolTip"] == "Melee" then
-						_G["SelectWeapon"] = L_214_[2]["Name"]
-					end
-				end
-			elseif _G["ChooseWP"] == "Sword" then
-				for L_215_forvar0, L_216_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
-					local L_217_ = {}
-					L_217_[3], L_217_[2] = L_215_forvar0, L_216_forvar1
-					if L_217_[2]["ToolTip"] == "Sword" then
-						_G["SelectWeapon"] = L_217_[2]["Name"]
-					end
-				end
-			elseif _G["ChooseWP"] == "Gun" then
-				for L_218_forvar0, L_219_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
-					local L_220_ = {}
-					L_220_[2], L_220_[1] = L_218_forvar0, L_219_forvar1
-					if L_220_[1]["ToolTip"] == "Gun" then
-						_G["SelectWeapon"] = L_220_[1]["Name"]
-					end
-				end
-			elseif _G["ChooseWP"] == "Blox Fruit" then
-				for L_221_forvar0, L_222_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
-					local L_223_ = {}
-					L_223_[1], L_223_[2] = L_221_forvar0, L_222_forvar1
-					if L_223_[2]["ToolTip"] == "Blox Fruit" then
-						_G["SelectWeapon"] = L_223_[2]["Name"]
-					end
-				end
-			end
-		end)
-	end
-end)
-L_1_[93]["Main"]:AddSection({
 	"Farmin's"
+})
 FarmLevel = L_1_[93]["Main"]:AddToggle({
 	["Name"] = "Auto Farm Level",
 	["Description"] = "Level 1 to 2800";
@@ -4674,6 +4618,60 @@ end)
 L_1_[93]["Settings"]:AddSection({
 	"Settings / Configure"
 })
+WeaponDropdown = L_1_[93]["Settings"]:AddDropdown({
+	["Name"] = "Select Weapon",
+	["Options"] = {
+		"Melee";
+		"Sword",
+		"Blox Fruit";
+		"Gun"
+	},
+	["Default"] = "Melee";
+	["Callback"] = function(L_210_arg0)
+		local L_211_ = {}
+		L_211_[1] = L_210_arg0
+		_G["ChooseWP"] = L_211_[1]
+	end
+})
+spawn(function()
+	while task["wait"](.5) do
+		pcall(function()
+			if _G["ChooseWP"] == "Melee" then
+				for L_212_forvar0, L_213_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
+					local L_214_ = {}
+					L_214_[3], L_214_[2] = L_212_forvar0, L_213_forvar1
+					if L_214_[2]["ToolTip"] == "Melee" then
+						_G["SelectWeapon"] = L_214_[2]["Name"]
+					end
+				end
+			elseif _G["ChooseWP"] == "Sword" then
+				for L_215_forvar0, L_216_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
+					local L_217_ = {}
+					L_217_[3], L_217_[2] = L_215_forvar0, L_216_forvar1
+					if L_217_[2]["ToolTip"] == "Sword" then
+						_G["SelectWeapon"] = L_217_[2]["Name"]
+					end
+				end
+			elseif _G["ChooseWP"] == "Gun" then
+				for L_218_forvar0, L_219_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
+					local L_220_ = {}
+					L_220_[2], L_220_[1] = L_218_forvar0, L_219_forvar1
+					if L_220_[1]["ToolTip"] == "Gun" then
+						_G["SelectWeapon"] = L_220_[1]["Name"]
+					end
+				end
+			elseif _G["ChooseWP"] == "Blox Fruit" then
+				for L_221_forvar0, L_222_forvar1 in pairs(plr["Backpack"]:GetChildren()) do
+					local L_223_ = {}
+					L_223_[1], L_223_[2] = L_221_forvar0, L_222_forvar1
+					if L_223_[2]["ToolTip"] == "Blox Fruit" then
+						_G["SelectWeapon"] = L_223_[2]["Name"]
+					end
+				end
+			end
+		end)
+	end
+end)
 
 BusuAura = L_1_[93]["Settings"]:AddToggle({
 	["Name"] = "Auto Turn on Buso",
@@ -13066,7 +13064,7 @@ spawn(function()
 	end
 end)
 L_1_[93]["Raids"]:AddToggle({
-	["Name"] = "Auto Tween To Lab",
+	["Name"] = "Auto Fly To Lab",
 	["Default"] = false,
 	["Callback"] = function(L_1509_arg0)
 		-- Serviços e variáveis principais
